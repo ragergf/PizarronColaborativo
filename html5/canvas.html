@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>toDataURL example</title>
+    <style>
+      canvas {
+        border:solid black 1px;
+      }
+
+      div {
+        width:400px;
+        height:400px;
+        border:solid black 1px;
+      }
+    </style>
+</head>
+<body>
+  <h1>Copy graphic using toDataURL</h1>
+     
+  <div>
+    <button id="copy">Copy canvas image to image element</button> <br />
+    <canvas id="MyCanvas" width="400" height="400"  >This browser or document mode doesn't support canvas</canvas>
+    <div id="MyPix" src="" width="400" height="400" />
+    <a id="download" download="CanvasDemo.png">Download as image</a>
+  </div>
+
+  <script>
+    // Create some graphics on the canvas.    
+    var canvas = document.getElementById("MyCanvas");
+    if (canvas.getContext) {
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "white";
+      ctx.beginPath();
+      ctx.rect(5, 5, 300, 250);
+      ctx.fill();
+      ctx.stroke();
+      ctx.arc(150, 150, 100, 0, Math.PI, false);
+      ctx.stroke();
+   }
+
+    // catch the click from the button and copy the graphic
+    document.getElementById("copy").addEventListener("click", function () {
+      var canvas1 = document.getElementById("MyCanvas");
+      if (canvas1.getContext) {
+        var ctx = canvas1.getContext("2d");                // Get the context for the canvas.
+        var myImage = canvas1.toDataURL("image/png");      // Get the data as an image.
+      }
+      var imageElement = document.getElementById("MyPix");  // Get the img object.
+      //imageElement.src = myImage;                           // Set the src to data from the canvas.
+	  imageElement.style.backgroundImage = "url('"+myImage+"')";
+    }, false);
+
+	function download() {
+		var dt = canvas.toDataURL();
+		this.href = dt; //this may not work in the future..
+	}
+	document.getElementById('download').addEventListener('click', download, false);
+
+  </script>
+</body>
+</html> 
