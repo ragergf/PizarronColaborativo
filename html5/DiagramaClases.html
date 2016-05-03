@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+	<head charset="utf-8">
+		<title>jQuery UI Droppable - Default functionality</title>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		<link rel="stylesheet" type="text/css" media="all" href="curve.css" />
+		<style>
+			#draggable, .overlay { width: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }			
+			.rcorners2 {
+				border-radius: 25px;
+				border: 2px solid #73AD21;
+				padding: 20px; 
+			}
+			#canvas-wrap { position:relative;
+				width: 800px;
+				height: 600px;
+			} /* Make this a positioned parent */			
+		</style>
+
+	</head>
+	
+	<body>
+		<div id="canvas-wrap" class="rcorners2">
+			<canvas id="canvas" width="800" height="600"  class="quadratic" style= "border-radius: 25px;border: 2px solid #73AD21;" ></canvas>
+			<div id="overlay1" class="draggable ui-widget-content overlay" >hola</div>
+			<div id="overlay2" class="draggable ui-widget-content overlay" >adios</div>
+		</div>
+	</body>
+	
+	
+			<script>
+			(function() {
+				var canvas, ctx, code, point, style, drag = null, dPoint;
+				
+				function Init(quadratic)
+				{
+					point = {
+						p1: { x:100, y:250 },
+						p2: { x:400, y:250 }
+					};
+					
+					if (quadratic) {
+						point.cp1 = { x: 250, y: 100 };
+					}
+					else {
+						point.cp1 = { x: 150, y: 100 };
+						point.cp2 = { x: 350, y: 100 };
+					}
+					// default styles
+					style = {
+						curve:	{ width: 6, color: "#333" },
+						cpline:	{ width: 1, color: "#C00" },
+						point: { radius: 10, width: 2, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
+					}
+					
+					// line style defaults
+					ctx.lineCap = "round";			
+					ctx.lineJoin = "round";
+					DrawCanvas();
+				};
+				
+				function DrawCanvas() {
+					//limpia el canvas
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					
+					// control lines
+					ctx.lineWidth = style.cpline.width;
+					ctx.strokeStyle = style.cpline.color;
+					ctx.beginPath();
+					ctx.moveTo(point.p1.x, point.p1.y);
+					ctx.lineTo(point.cp1.x, point.cp1.y);
+					if (point.cp2) {
+						ctx.moveTo(point.p2.x, point.p2.y);
+						ctx.lineTo(point.cp2.x, point.cp2.y);
+					}
+					else {
+						ctx.lineTo(point.p2.x, point.p2.y);
+					}
+					ctx.stroke();
+				};
+				
+				$( ".draggable" ).draggable({containment: "parent",drag: function(){
+						var offset = $(this).offset();
+						var xPos = offset.left;
+						var yPos = offset.top;
+						point.p1 = { x:xPos, y:yPos };
+						DrawCanvas();
+						//$('#posX').text('x: ' + xPos);
+						//$('#posY').text('y: ' + yPos);
+					}});
+
+				
+				// start
+				canvas = document.getElementById("canvas");
+//				code = document.getElementById("code");
+				if (canvas.getContext) {
+					ctx = canvas.getContext("2d");
+					Init(canvas.className == "quadratic");
+				}
+				
+				// control points
+				/*for (var p in point) {
+					ctx.lineWidth = style.point.width;
+					ctx.strokeStyle = style.point.color;
+					ctx.fillStyle = style.point.fill;
+					ctx.beginPath();
+					ctx.arc(point[p].x, point[p].y, style.point.radius, style.point.arc1, style.point.arc2, true);
+					ctx.fill();
+					ctx.stroke();
+				}*/
+	
+	
+	
+	
+			})();
+		</script>
+	
+</html>
