@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+	<head charset="utf-8">
+		<title>jQuery UI Droppable - Default functionality</title>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>		
+		<script src="punto.js"></script>		
+	</head>
+	
+	<body>
+		<canvas id="canvas" width="800" height="600"  class="quadratic" style= "border-radius: 25px;border: 2px solid #73AD21;" ></canvas>
+	</body>
+	
+	
+	<script>
+			(function() {
+				var p1 = new Punto(5,11);
+				
+				var puntos = new Array();
+				
+				puntos[0] = p1;
+				
+				console.log('puntos.length = ' + puntos.length);
+				
+				for(i = 1; i < 11 ; i++) { // listando los elementos del array
+				  puntos[i] = new Punto(i, (i*2));
+				}
+				
+				for(i = 0; i < puntos.length ; i++) { // listando los elementos del array
+				  console.log('En la posición: ' + i + ' esta el elemento: x: ' +  puntos[i].x + ", y: " + puntos[i].y);
+				}
+			})();
+		</script>
+	
+			
+	
+</html>
