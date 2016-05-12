@@ -1,6 +1,6 @@
 var puntos = new Array();
 var lineas = new Array();
-var ctx, drag;
+var ctx, drag, ancho, alto;
 
 function Punto(x, y)
 {
@@ -17,8 +17,8 @@ function Linea(puntoA, puntoB)
 function Init()
 {
 	var p1 = new Punto(5,11);
-				
-	
+	ancho = 50;
+	alto = 20;
 	
 	puntos[0] = p1;
 	
@@ -49,7 +49,7 @@ function Init()
 	style = {
 		curve:	{ width: 6, color: "#333" },
 		cpline:	{ width: 1, color: "#C00" },
-		point: { radius: 10, width: 2, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
+		point: { radius: 6, width: 1, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
 	}
 	
 	// event handlers
@@ -84,7 +84,8 @@ function DrawCanvas() {
 		ctx.strokeStyle = style.point.color;
 		ctx.fillStyle = style.point.fill;
 		ctx.beginPath();
-		ctx.arc(puntos[p].x, puntos[p].y, style.point.radius, style.point.arc1, style.point.arc2, true);
+		//ctx.arc(puntos[p].x, puntos[p].y, style.point.radius, style.point.arc1, style.point.arc2, true);
+		ctx.strokeRect(puntos[p].x, puntos[p].y,ancho,alto)
 		ctx.fill();
 		ctx.stroke();
 	}
@@ -99,7 +100,8 @@ function DrawCanvas() {
 		for (var p in puntos) {
 			dx = puntos[p].x - e.x;
 			dy = puntos[p].y - e.y;
-			if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
+			//if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
+			if(((puntos[p].x < e.x ) &&  (e.x < (puntos[p].x + ancho)) ) && ((puntos[p].y < e.y )&&(e.y < (puntos[p].y + alto)))){
 				drag = p;
 				dPoint = e;
 				canvas.style.cursor = "move";
