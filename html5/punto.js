@@ -1,6 +1,15 @@
 var puntos = new Array();
+var puntosMedios = new Array();
 var lineas = new Array();
 var ctx, drag, ancho, alto;
+
+function PuntoMedio(topPoint, bottomPoint, leftPoint, rightPoint)
+{
+	this.topPoint = topPoint;
+	this.bottomPoint = bottomPoint;
+	this.leftPoint = leftPoint;
+	this.rightPoint = rightPoint;
+}
 
 function Punto(x, y)
 {
@@ -17,8 +26,8 @@ function Linea(puntoA, puntoB)
 function Init()
 {
 	var p1 = new Punto(5,11);
-	ancho = 50;
-	alto = 20;
+	ancho = 150;
+	alto = 80;
 	
 	puntos[0] = p1;
 	
@@ -34,11 +43,19 @@ function Init()
 	}
 	*/
 	
-	for(i=1, p=0, x=250, j=500; i < 6 ; i++, x=x+1, j=j-50, p=p+2)
+	for(i=1, p=0, x=50, j=400; i < 3 ; i++, x=x+170, j=j-20, p=p+2)
 	{
 		lineas[i-1] = new Linea(new Punto(x, j), new Punto(j, x));
 		puntos[p] = lineas[i-1].puntoA;
 		puntos[p+1] = lineas[i-1].puntoB;
+		
+		puntosMedios[p] = new PuntoMedio(new Punto(puntos[p].x +(ancho/2), puntos[p].y), new Punto(puntos[p].x +(ancho/2), puntos[p].y + alto),
+		new Punto(puntos[p].x, puntos[p].y + (alto/2)), new Punto(puntos[p].x + ancho, puntos[p].y + (alto/2)));
+		
+		puntosMedios[p+1] = new PuntoMedio(new Punto(puntos[p+1].x +(ancho/2), puntos[p+1].y), new Punto(puntos[p+1].x +(ancho/2), puntos[p+1].y + alto),
+		new Punto(puntos[p+1].x, puntos[p+1].y + (alto/2)), new Punto(puntos[p+1].x + ancho, puntos[p+1].y + (alto/2)));
+		
+		
 	}
 	
 	for(i = 0; i < lineas.length ; i++) { // listando los elementos del array
@@ -49,7 +66,7 @@ function Init()
 	style = {
 		curve:	{ width: 6, color: "#333" },
 		cpline:	{ width: 1, color: "#C00" },
-		point: { radius: 6, width: 1, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
+		point: { radius: 3, width: 1, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
 	}
 	
 	// event handlers
@@ -64,6 +81,39 @@ function Init()
 // draw canvas
 function DrawCanvas() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
+	console.log('antes de dibujar los puntos');
+	for (var p in puntosMedios) {
+		console.log('p medio: '+ p);
+		
+		puntosMedios[p] = new PuntoMedio(new Punto(puntos[p].x +(ancho/2), puntos[p].y), new Punto(puntos[p].x +(ancho/2), puntos[p].y + alto),
+		new Punto(puntos[p].x, puntos[p].y + (alto/2)), new Punto(puntos[p].x + ancho, puntos[p].y + (alto/2)));
+		
+		
+		
+		ctx.lineWidth = style.point.width;
+		ctx.strokeStyle = style.point.color;
+		ctx.fillStyle = style.point.fill;
+		ctx.beginPath();
+		ctx.arc(puntosMedios[p].topPoint.x, puntosMedios[p].topPoint.y, style.point.radius, style.point.arc1, style.point.arc2, true);
+		ctx.fill();
+		ctx.stroke();
+		
+		ctx.beginPath();
+		ctx.arc(puntosMedios[p].bottomPoint.x, puntosMedios[p].bottomPoint.y, style.point.radius, style.point.arc1, style.point.arc2, true);
+		ctx.fill();
+		ctx.stroke();
+		
+		ctx.beginPath();
+		ctx.arc(puntosMedios[p].leftPoint.x, puntosMedios[p].leftPoint.y, style.point.radius, style.point.arc1, style.point.arc2, true);
+		ctx.fill();
+		ctx.stroke();
+		
+		ctx.beginPath();
+		ctx.arc(puntosMedios[p].rightPoint.x, puntosMedios[p].rightPoint.y, style.point.radius, style.point.arc1, style.point.arc2, true);
+		ctx.fill();
+		ctx.stroke();
+	}
 	
 	for(i = 0; i < lineas.length ; i++) { // listando los elementos del array
 		console.log('pintando linea' + i + ' puntoA( ' +  lineas[i].puntoA.x + "," + lineas[i].puntoA.y + ')');
@@ -89,6 +139,7 @@ function DrawCanvas() {
 		ctx.fill();
 		ctx.stroke();
 	}
+	
 
 }
 
