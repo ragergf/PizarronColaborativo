@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+	<head charset="utf-8">
+		<title>jQuery UI Droppable - Default functionality</title>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>		
+		<script src="diagrama.js"></script>		
+	</head>
+	
+	<body>
+		<canvas id="canvas" width="800" height="600"  class="quadratic" style= "border-radius: 25px;border: 2px solid #73AD21;" ></canvas>
+	</body>
+	
+	
+	<script>
+			(function() {
+				// start
+				canvas = document.getElementById("canvas");
+				code = document.getElementById("code");
+				if (canvas.getContext) {
+					ctx = canvas.getContext("2d");
+					Init(canvas.className == "quadraticss");
+				}	
+			})();
+		</script>
+	
+			
+	
+</html>
