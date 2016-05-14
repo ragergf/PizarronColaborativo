@@ -24,10 +24,10 @@ function Relacion(puntoA, puntoB)
 }
 
 
-function Relacion(puntoA, puntoB)
+function Relacion(rectanguloA, rectanguloB)
 {
-	this.puntoA = puntoA;
-	this.puntoB = puntoB;
+	this.rectanguloA = rectanguloA;
+	this.rectanguloB = rectanguloB;
 }
 
 function Rectangulo(puntoInicial,puntoMedio,ancho,alto)
@@ -36,6 +36,7 @@ function Rectangulo(puntoInicial,puntoMedio,ancho,alto)
 	this.puntoMedio=puntoMedio;
 	this.ancho=ancho;
 	this.alto=alto;
+	this.indexPuntoMedio=0;
 }
 
 
@@ -48,25 +49,32 @@ function Init()
 	alto = 80;
 		
 	//crea rectangulos
-	for(m=0;m < 5 ;m++)
+	for(m=0;m < 3 ;m++)
 	{
-		x = (Math.random() * 100) + 1;
-		y = (Math.random() * 100) + 1;
+		x = (Math.random() * 200) + 1;
+		y = (Math.random() * 200) + 1;
 		
 		//x=100+m;
 		//y=100-m;
 		console.log("x: "+x + ", y: "+y);
 		
-		topPoint = new Punto(x, y + (ancho/2));
-		bottomPoint = new Punto(x+alto, y+(ancho/2));
-		leftPoint = new Punto(x+(alto/2), y);
-		rightPoint = new Punto(x+(alto/2), y+ancho);
+		//Reglas para definir los puntos medios
+		leftPoint = new Punto(x, y + (alto/2));
+		rightPoint = new Punto(x+ancho, y+(alto/2));
+		topPoint = new Punto(x+(ancho/2), y);
+		bottomPoint = new Punto(x+(ancho/2), y+alto);
 		
 		puntoMedio = new PuntoMedio(topPoint, bottomPoint, leftPoint, rightPoint);
 		
+		//inicializamos el rectangulo
 		rectangulos[m] = new Rectangulo(new Punto(x,y), puntoMedio, null, null);
 		
 	}
+	
+	//configuraciones manualas
+	relaciones[0] = new Relacion(rectangulos[0], rectangulos[1]);
+	rectangulos[0].indexPuntoMedio=1;
+	rectangulos[1].indexPuntoMedio=0;
 		
 	// default styles
 	style = {
@@ -86,9 +94,14 @@ function Init()
 
 // draw canvas
 function DrawCanvas() {
+	var puntoMedio, topPoint, bottomPoint, leftPoint, rightPoint;
+	var x, y;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
+	
 	console.log('antes de dibujar los rectangulos');
+	
+	
 			
 	for (var p in rectangulos) {
 		console.log('p: '+ p);
@@ -99,6 +112,46 @@ function DrawCanvas() {
 		//ctx.arc(puntos[p].x, puntos[p].y, style.point.radius, style.point.arc1, style.point.arc2, true);
 		ctx.strokeRect(rectangulos[p].puntoInicial.x, rectangulos[p].puntoInicial.y,ancho,alto)
 		ctx.fill();
+		ctx.stroke();
+		
+		x= rectangulos[p].puntoInicial.x;
+		y= rectangulos[p].puntoInicial.y;
+		leftPoint = new Punto(x, y + (alto/2));
+		rightPoint = new Punto(x+ancho, y+(alto/2));
+		topPoint = new Punto(x+(ancho/2), y);
+		bottomPoint = new Punto(x+(ancho/2), y+alto);
+		
+		//puntoMedio = new PuntoMedio(topPoint, bottomPoint, leftPoint, rightPoint);
+		
+		rectangulos[p].puntoMedio.puntosMedios[0] = topPoint;
+		rectangulos[p].puntoMedio.puntosMedios[1] = bottomPoint;
+		rectangulos[p].puntoMedio.puntosMedios[2] = leftPoint;
+		rectangulos[p].puntoMedio.puntosMedios[3] = rightPoint;
+		
+		for(var q in rectangulos[p].puntoMedio.puntosMedios)
+		{
+			console.log("rectangulo "+p+" en puntoMedio "+q);
+			
+			ctx.lineWidth = style.point.width;
+			ctx.strokeStyle = style.point.color;
+			ctx.fillStyle = style.point.fill;
+			ctx.beginPath();
+			ctx.arc(rectangulos[p].puntoMedio.puntosMedios[q].x, rectangulos[p].puntoMedio.puntosMedios[q].y, style.point.radius, style.point.arc1, style.point.arc2, true);
+			ctx.fill();
+			ctx.stroke();
+		}
+	}
+	
+	for(var p in relaciones) { // listando los elementos del array
+		//console.log('pintando linea' + p + ' puntoA( ' +  relaciones[p].puntoA.x + "," + relaciones[p].puntoA.y + ')');
+		//console.log('pintando linea' + p + ' puntoB( ' +  relaciones[p].puntoB.x + "," + relaciones[p].puntoB.y + ')');
+		// control lines
+		ctx.lineWidth = style.cpline.width;
+		ctx.strokeStyle = style.cpline.color;
+		ctx.beginPath();
+		
+		ctx.moveTo(relaciones[p].rectanguloA.puntoMedio.puntosMedios[relaciones[p].rectanguloA.indexPuntoMedio].x, relaciones[p].rectanguloA.puntoMedio.puntosMedios[relaciones[p].rectanguloA.indexPuntoMedio].y);	
+		ctx.lineTo(relaciones[p].rectanguloB.puntoMedio.puntosMedios[relaciones[p].rectanguloB.indexPuntoMedio].x, relaciones[p].rectanguloB.puntoMedio.puntosMedios[relaciones[p].rectanguloB.indexPuntoMedio].y);	
 		ctx.stroke();
 	}
 	
