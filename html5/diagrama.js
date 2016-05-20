@@ -23,7 +23,6 @@ function Relacion(puntoA, puntoB)
 	this.puntoB = puntoB;
 }
 
-
 function Relacion(rectanguloA, rectanguloB)
 {
 	this.rectanguloA = rectanguloA;
@@ -38,6 +37,9 @@ function Rectangulo(puntoInicial,puntoMedio,ancho,alto,texto)
 	this.alto=alto;
 	this.indexPuntoMedio=0
 	this.texto=texto;
+	this.clase='';
+	this.variables='';
+	this.metodos='';
 }
 
 
@@ -74,7 +76,12 @@ function Init()
 	
 	//configuraciones manualas
 	rectangulos[0].texto = "atributo_1";
-	rectangulos[1].texto = "atributo_1\natributo2\natributo3\natributo4\natributo5";
+	
+	
+	rectangulos[1].clase = "clase";
+	rectangulos[1].variables = "atributo_1\natributo2\natributo3";
+	rectangulos[1].metodos = "metodo1\nmetodo2\natributo3\natributo4\natributo5";
+	
 	relaciones[0] = new Relacion(rectangulos[0], rectangulos[1]);
 	//relaciones[1] = new Relacion(rectangulos[1], rectangulos[2]);
 	//relaciones[2] = new Relacion(rectangulos[2], rectangulos[3]);
@@ -84,7 +91,7 @@ function Init()
 	// default styles
 	style = {
 		curve:	{ width: 6, color: "#333" },
-		cpline:	{ width: 1, color: "#C00" },
+		cpline:	{ width: 1, color: "#000" },
 		point: { radius: 1, width: 1, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
 	}
 	
@@ -113,7 +120,7 @@ function DrawCanvas() {
 		ctx.strokeStyle = style.point.color;
 		ctx.fillStyle = style.point.fill;
 		
-		drawString(rectangulos[p].texto,rectangulos[p].puntoInicial.x,rectangulos[p].puntoInicial.y,'#66a',0,"sans-serif",12, rectangulos[p]);
+		drawString('#000',0,"sans-serif",12, rectangulos[p]);
 		
 		ctx.beginPath();
 		//ctx.arc(puntos[p].x, puntos[p].y, style.point.radius, style.point.arc1, style.point.arc2, true);
@@ -209,7 +216,7 @@ function DrawCanvas() {
 			dx = rectangulos[p].puntoInicial.x - e.x;
 			dy = rectangulos[p].puntoInicial.y - e.y;
 			//if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
-			if(((rectangulos[p].puntoInicial.x < e.x ) &&  (e.x < (rectangulos[p].puntoInicial.x + ancho)) ) && ((rectangulos[p].puntoInicial.y < e.y )&&(e.y < (rectangulos[p].puntoInicial.y + alto)))){
+			if(((rectangulos[p].puntoInicial.x < e.x ) &&  (e.x < (rectangulos[p].puntoInicial.x + rectangulos[p].ancho)) ) && ((rectangulos[p].puntoInicial.y < e.y )&&(e.y < (rectangulos[p].puntoInicial.y + rectangulos[p].alto)))){
 				drag = p;
 				dPoint = e;
 				canvas.style.cursor = "move";
@@ -248,12 +255,18 @@ function DrawCanvas() {
 	}
 	
 	
-	function drawString( text, posX, posY, textColor, rotation, font, fontSize, rectangulo) {
+	function drawString(textColor, rotation, font, fontSize, rectangulo) {
+				
+				var text = rectangulo.clase + '\n' +rectangulo.variables + '\n' + rectangulo.metodos;
+				var posX = rectangulo.puntoInicial.x;
+				var posY = rectangulo.puntoInicial.y;
+				
+				var separadorVariablesMetodos = rectangulo.variables.split("\n").length;
 				
 				var lines = text.split("\n");
 				var metrics
 				var i;
-				var extraIzquierdo = 15;
+				var extraIzquierdo = 10;
 				var extraSuperior = 0;
 				var extraPosterior = 5;
 				var extraDerecho = 10;
@@ -275,7 +288,23 @@ function DrawCanvas() {
 						rectangulo.ancho = metrics.width + fontSize + extraDerecho;
 				}
 				rectangulo.alto = (i * fontSize) + fontSize+ (sangria * (i -1)) + extraPosterior;
-		 		ctx.restore();
+		 		
+				ctx.beginPath();
+				ctx.moveTo(0, (sangria + fontSize)+5);	
+				ctx.lineTo(rectangulo.ancho, (sangria + fontSize)+5);	
+				ctx.stroke();
+				
+				
+				ctx.beginPath();		
+				ctx.moveTo(0, ((sangria + fontSize)*(separadorVariablesMetodos + 1))+5);	
+				ctx.lineTo(rectangulo.ancho, ((sangria + fontSize)*(separadorVariablesMetodos + 1))+5);	
+				ctx.stroke();
+				
+				separadorVariablesMetodos
+				
+				ctx.restore();
+				
+				
 		 	}
 		 	
 		 	function run() {
@@ -288,3 +317,18 @@ function DrawCanvas() {
 				*/
 				//drawString('anach oben',27,590,'#66a',0,"sans-serif",10);
 		 	}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
