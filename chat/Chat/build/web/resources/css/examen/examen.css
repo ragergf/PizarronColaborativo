@@ -1,0 +1,55 @@
+.chatFrame
+{
+    width: 95%;
+    height: 700px;
+}
+
+.headerLeft
+{
+    
+}
+.headerRight 
+{
+    width: 120px;
+}
+
+.headerRight td 
+{
+    width: 120px;
+}
+
+.menuExamen
+{
+    width: 980px;
+}
+
+.menuExamenLeft
+{
+    width: 200px;
+}
+
+.menuExamenLeft td
+{
+    width: 200px;
+}
+
+.menuExamenRight
+{
+    
+}
+
+.bodyExamen
+{
+    width: 680px;
+}
+
+.menuExamen td.bodyExamen
+{
+    width: 680px;
+}
+
+table.app
+{
+    table-layout: fixed;
+    width: 980px;
+}
